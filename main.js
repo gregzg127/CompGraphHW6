@@ -41,7 +41,7 @@ uniform int uMapping;  // 0 = bump mapping, 1 = normal mapping
 
 out vec4 fragColor;
 
-const float bumpScale = 3.0;
+const float bumpScale = 10.0;
 
 // convert RGB to luminance (Rec._601 standard, https://en.wikipedia.org/wiki/Rec._601)
 // or you can use a height map texture
