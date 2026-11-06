@@ -196,7 +196,6 @@ const objects = [
     { mesh: cylinderMesh, texture: normalTexture, mapping: NORMAL_MAPPING, offset: [2.8, 0, 0] },
     { mesh: taurusMesh, texture: brickTexture, mapping: BUMP_MAPPING, offset: [0, 0, 0] },
     { mesh: coneMesh, texture: brickTexture, mapping: BUMP_MAPPING, offset: [2.7, 0, 0] },
-    { mesh: cylinderMesh, texture: normalTexture, mapping: NORMAL_MAPPING, offset: [5.4, 0, 0] }
 ];
 gl.enable(gl.DEPTH_TEST);
 gl.clearColor(0, 0, 0, 1);
