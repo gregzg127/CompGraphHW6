@@ -189,10 +189,27 @@ function loadTexture(url) {
 const brickTexture = loadTexture("brick.png");
 const normalTexture = loadTexture("texture2.jpg");
 
+const videoElement = document.createElement("video");
+videoElement.src = "MoonMp4.mp4";
+videoElement.loop = true;
+videoElement.muted = true;
+videoElement.playsInline = true;
+videoElement.play().catch(console.error);
+
+const videoTexture = gl.createTexture();
+gl.bindTexture(gl.TEXTURE_2D, videoTexture);
+
+gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([0, 0, 0, 255]));
+
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
 const BUMP_MAPPING = 0, NORMAL_MAPPING = 1;
 const objects = [
     { mesh: cubeMesh, texture: brickTexture, mapping: BUMP_MAPPING, offset: [-5.4, 0, 0] },
-    { mesh: sphereMesh, texture: brickTexture, mapping: BUMP_MAPPING, offset: [-2.7, 0, 0] },
+    { mesh: sphereMesh, texture: videoTexture, mapping: BUMP_MAPPING, offset: [-2.7, 0, 0] },
     { mesh: cylinderMesh, texture: normalTexture, mapping: NORMAL_MAPPING, offset: [2.8, 0, 0] },
     { mesh: taurusMesh, texture: brickTexture, mapping: BUMP_MAPPING, offset: [0, 0, 0] },
     { mesh: coneMesh, texture: brickTexture, mapping: BUMP_MAPPING, offset: [5.4, 0, 0] },
@@ -256,6 +273,15 @@ function render(time) {
   const rotation = multiply(multiply(rotateY(dragRotY), rotateX(dragRotX)), axisRotation);
 
   gl.activeTexture(gl.TEXTURE0);
+
+  if (videoElement.readyState >= videoElement.HAVE_CURRENT_DATA){
+    gl.bindTexture(gl.TEXTURE_2D, videoTexture);
+
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, videoElement);
+  }
+
   for (const { mesh, texture, mapping, offset } of objects) {
     gl.uniformMatrix4fv(uModelView, false, multiply(view, multiply(translate(...offset), rotation)));
     gl.uniform1i(uMapping, mapping);
